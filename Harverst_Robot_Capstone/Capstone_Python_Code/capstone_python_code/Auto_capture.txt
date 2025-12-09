@@ -1,0 +1,35 @@
+import cv2
+import os
+
+save_dir = './dataset/images/train'
+os.makedirs(save_dir, exist_ok=True)
+
+# 💡 백엔드 없이 카메라 ID 0만 사용
+cap = cv2.VideoCapture(0)
+
+if not cap.isOpened():
+    print("❌ 카메라를 열 수 없습니다.")
+    exit()
+
+img_id = 0
+print("📸 's' 키: 이미지 저장 / 'q' 키: 종료")
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("❌ 프레임을 읽을 수 없습니다.")
+        break
+
+    cv2.imshow("Webcam View", frame)
+
+    key = cv2.waitKey(1)
+    if key == ord('s'):
+        filepath = os.path.join(save_dir, f"img_{img_id:04}.jpg")
+        cv2.imwrite(filepath, frame)
+        print(f"✅ 저장됨: {filepath}")
+        img_id += 1
+    elif key == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
